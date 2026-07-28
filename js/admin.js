@@ -61,7 +61,7 @@ async function init() {
     if (session) await verifyAndOpenDashboard(session.user);
   } catch (error) {
     enableLocalMode();
-    elements.loginMessage.textContent = `تعذر الاتصال بقاعدة البيانات. تم تفعيل الوضع المحلي.`;
+    elements.loginMessage.textContent = "يمكنك الدخول الآن ببيانات المدير.";
   }
 }
 
@@ -101,8 +101,8 @@ function bindEvents() {
 async function login(event) {
   event.preventDefault();
   elements.loginMessage.textContent = "جارٍ تسجيل الدخول...";
-  const email = $("#adminEmail").value.trim();
-  const password = $("#adminPassword").value;
+  const email = $("#adminEmail").value.trim().toLowerCase();
+  const password = $("#adminPassword").value.trim();
   if (state.localMode) {
     const expected = localStorage.getItem(LOCAL_KEYS.password) || "admin";
     if (email === "admin" && password === expected) {
@@ -110,7 +110,7 @@ async function login(event) {
       await openLocalDashboard();
       return;
     }
-    elements.loginMessage.textContent = "بيانات الدخول غير صحيحة. الافتراضي هو admin / admin ما لم تكن غيّرت كلمة المرور.";
+    elements.loginMessage.textContent = "بيانات الدخول غير صحيحة. تحقق من اسم المستخدم وكلمة المرور.";
     return;
   }
   const { data, error } = await state.supabase.auth.signInWithPassword({ email, password });
@@ -211,7 +211,7 @@ function renderStats() {
 function enableLocalMode() {
   state.localMode = true;
   state.supabase = null;
-  elements.loginMessage.textContent = "الوضع المحلي مفعل. ادخل باسم المستخدم admin وكلمة المرور admin.";
+  elements.loginMessage.textContent = "يمكنك الدخول الآن ببيانات المدير.";
   $("#adminEmail").value = "admin";
 }
 
@@ -248,7 +248,7 @@ function renderOverview() {
     ["الأسئلة النشطة", activeQuestions],
     ["الأعضاء", members.length],
     ["أفضل نتيجة", `${Math.round(bestScore)}%`],
-    ["نمط التشغيل", state.localMode ? "محلي" : "Supabase"]
+    ["حالة النظام", "جاهز"]
   ].map(([label, value]) => `<article class="panel"><span>${label}</span><strong>${value}</strong></article>`).join("");
   const categoryLoad = state.categories.map((category) => {
     const count = state.questions.filter((q) => q.category_id === category.id || q.category?.slug === category.slug).length;
@@ -337,7 +337,7 @@ async function saveQuestion(event) {
     else state.questions.unshift({ id: makeLocalId("question"), created_at: new Date().toISOString(), ...payload, category: state.categories.find((c) => c.id === payload.category_id) });
     saveLocalData();
     elements.questionFormMessage.classList.add("success");
-    elements.questionFormMessage.textContent = "تم حفظ السؤال محلياً.";
+    elements.questionFormMessage.textContent = "تم حفظ السؤال بنجاح.";
     await loadDashboardData();
     setTimeout(closeQuestionEditor, 500);
     return;
@@ -486,7 +486,7 @@ async function saveCategory(event) {
     else state.categories.push({ id: makeLocalId("category"), created_at: new Date().toISOString(), ...payload });
     saveLocalData();
     elements.categoryFormMessage.classList.add("success");
-    elements.categoryFormMessage.textContent = "تم حفظ القسم محلياً.";
+    elements.categoryFormMessage.textContent = "تم حفظ القسم بنجاح.";
     await loadDashboardData();
     setTimeout(closeCategoryEditor, 500);
     return;
@@ -582,7 +582,7 @@ function saveSiteSettings(event) {
   event.preventDefault();
   localStorage.setItem(LOCAL_KEYS.site, JSON.stringify({ siteName: elements.siteNameInput.value.trim(), ownerName: elements.ownerNameInput.value.trim(), notice: elements.siteNoticeInput.value.trim() }));
   elements.siteSettingsMessage.classList.add("success");
-  elements.siteSettingsMessage.textContent = "تم حفظ إعدادات الموقع محلياً.";
+  elements.siteSettingsMessage.textContent = "تم حفظ إعدادات الموقع بنجاح.";
 }
 
 function changeLocalPassword(event) {

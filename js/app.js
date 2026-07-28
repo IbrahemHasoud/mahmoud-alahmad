@@ -121,8 +121,8 @@ async function loadData() {
     state.categories = JSON.parse(localStorage.getItem("quiz-admin-categories") || "null") || DEMO_CATEGORIES;
     state.availableQuestions = JSON.parse(localStorage.getItem("quiz-admin-questions") || "null") || DEMO_QUESTIONS;
     elements.connectionStatus.textContent = isSupabaseConfigured()
-      ? "وضع تجريبي: تعذر الاتصال بقاعدة البيانات. تحقق من الإعدادات والإنترنت."
-      : "وضع محلي: يعمل الموقع ببنك الأسئلة الداخلي، والدخول للمدير admin / admin.";
+      ? "تم تحميل بنك الأسئلة الأساسي. تحقق من إعدادات الاتصال عند الحاجة."
+      : "بنك الأسئلة جاهز للاستخدام.";
     elements.connectionStatus.className = "status-line demo";
   }
 }

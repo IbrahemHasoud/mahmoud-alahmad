@@ -25,10 +25,10 @@
     <section id="adminLoginView" class="admin-login-card panel">
       <span class="eyebrow">دخول خاص</span>
       <h1>تسجيل دخول المدير</h1>
-      <p>الدخول الافتراضي: اسم المستخدم <strong>admin</strong> وكلمة المرور <strong>admin</strong>. يمكنك تغييرها من لوحة التحكم.</p>
+      <p>أدخل بيانات المدير للوصول إلى لوحة التحكم وإدارة الموقع.</p>
       <form id="adminLoginForm" class="stack-form">
         <label>اسم المستخدم<input id="adminEmail" type="text" autocomplete="username" required placeholder="admin"></label>
-        <label>كلمة المرور<input id="adminPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••"></label>
+        <label>كلمة المرور<input id="adminPassword" type="password" autocomplete="current-password" required minlength="4" placeholder="••••••••"></label>
         <div class="form-message" id="loginMessage" role="alert"></div>
         <button class="button button-primary" type="submit">دخول</button>
       </form>
@@ -133,7 +133,7 @@
       </section>
 
       <section id="siteTab" class="admin-tab-panel">
-        <div class="admin-toolbar panel"><div class="toolbar-copy"><h2>قسم الموقع</h2><p>إعدادات عامة محفوظة محلياً تظهر للمدير وتساعد في إدارة النسخة المنشورة.</p></div></div>
+        <div class="admin-toolbar panel"><div class="toolbar-copy"><h2>قسم الموقع</h2><p>إعدادات عامة تساعد المدير في إدارة النسخة المنشورة وتجهيز محتواها.</p></div></div>
         <form id="siteSettingsForm" class="panel stack-form">
           <div class="form-grid two-columns">
             <label>اسم الموقع<input id="siteNameInput" maxlength="90"></label>
@@ -146,7 +146,7 @@
       </section>
 
       <section id="securityTab" class="admin-tab-panel">
-        <div class="admin-toolbar panel"><div class="toolbar-copy"><h2>تغيير كلمة مرور المدير</h2><p>يعمل هذا الزر في وضع التخزين المحلي. عند ربط Supabase غيّر كلمة المرور من Authentication أيضاً.</p></div></div>
+        <div class="admin-toolbar panel"><div class="toolbar-copy"><h2>تغيير كلمة مرور المدير</h2><p>استخدم هذا القسم لتحديث كلمة مرور لوحة الإدارة.</p></div></div>
         <form id="passwordForm" class="panel stack-form">
           <label>كلمة المرور الحالية<input id="currentAdminPassword" type="password" required></label>
           <div class="form-grid two-columns">
