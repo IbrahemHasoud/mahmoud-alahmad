@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101b15">
+  <meta name="robots" content="noindex,nofollow">
+  <title>لوحة المدير | اختبر معلوماتك العسكرية</title>
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="admin-body">
+  <div class="background-grid" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark">🛡️</span><span><strong>لوحة المدير</strong><small>فوج الحماية</small></span></a>
+    <nav class="header-actions">
+      <button class="icon-button" id="themeToggle" type="button" aria-label="تبديل المظهر">☾</button>
+      <a class="button button-ghost button-small" href="index.html">الموقع</a>
+      <button class="button button-danger button-small hidden" id="logoutBtn" type="button">تسجيل الخروج</button>
+    </nav>
+  </header>
+
+  <main class="page-shell admin-shell">
+    <section id="adminLoginView" class="admin-login-card panel">
+      <span class="eyebrow">دخول خاص</span>
+      <h1>تسجيل دخول المدير</h1>
+      <p>الدخول الافتراضي: اسم المستخدم <strong>admin</strong> وكلمة المرور <strong>admin</strong>. يمكنك تغييرها من لوحة التحكم.</p>
+      <form id="adminLoginForm" class="stack-form">
+        <label>اسم المستخدم<input id="adminEmail" type="text" autocomplete="username" required placeholder="admin"></label>
+        <label>كلمة المرور<input id="adminPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••"></label>
+        <div class="form-message" id="loginMessage" role="alert"></div>
+        <button class="button button-primary" type="submit">دخول</button>
+      </form>
+    </section>
+
+    <section id="adminDashboardView" class="hidden">
+      <div class="admin-welcome">
+        <div><span class="eyebrow">الإدارة</span><h1>مرحبًا، <span id="adminName">المدير</span></h1></div>
+        <button class="button button-secondary" id="refreshAdminBtn" type="button">تحديث البيانات</button>
+      </div>
+
+      <div class="dashboard-stats">
+        <article><span>الأسئلة</span><strong id="questionsStat">0</strong></article>
+        <article><span>النتائج</span><strong id="resultsStat">0</strong></article>
+        <article><span>متوسط الدرجات</span><strong id="averageStat">0%</strong></article>
+        <article><span>المختبرون اليوم</span><strong id="todayStat">0</strong></article>
+      </div>
+
+      <div class="admin-tabs" role="tablist" aria-label="أقسام لوحة الإدارة">
+        <button class="admin-tab active" data-tab="overview" type="button">لوحة التحكم</button>
+        <button class="admin-tab" data-tab="questions" type="button">الأسئلة</button>
+        <button class="admin-tab" data-tab="results" type="button">النتائج</button>
+        <button class="admin-tab" data-tab="categories" type="button">الأقسام</button>
+        <button class="admin-tab" data-tab="members" type="button">الأعضاء</button>
+        <button class="admin-tab" data-tab="site" type="button">الموقع</button>
+        <button class="admin-tab" data-tab="security" type="button">الأمان</button>
+      </div>
+
+      <section id="overviewTab" class="admin-tab-panel active">
+        <div class="admin-toolbar panel">
+          <div class="toolbar-copy"><h2>نظرة عامة احترافية</h2><p>ملخص سريع لحالة بنك الأسئلة، النتائج، الأعضاء، وتجهيز الموقع للنشر.</p></div>
+          <a class="button button-secondary" href="index.html">معاينة الموقع</a>
+        </div>
+        <div id="overviewCards" class="admin-card-grid"></div>
+        <div class="panel">
+          <h2>مؤشرات الأداء</h2>
+          <div id="adminInsights" class="insight-list"></div>
+        </div>
+      </section>
+
+      <section id="questionsTab" class="admin-tab-panel">
+        <div class="admin-toolbar panel">
+          <div class="toolbar-copy"><h2>إدارة بنك الأسئلة</h2><p>أضف سؤالًا جديدًا أو عدّل سؤالًا موجودًا.</p></div>
+          <button class="button button-primary" id="newQuestionBtn" type="button">+ سؤال جديد</button>
+        </div>
+
+        <div id="questionEditor" class="panel editor-panel hidden">
+          <div class="editor-heading"><h2 id="questionEditorTitle">سؤال جديد</h2><button class="icon-button" id="closeQuestionEditorBtn" type="button">×</button></div>
+          <form id="questionForm" class="stack-form">
+            <input id="questionId" type="hidden">
+            <div class="form-grid two-columns">
+              <label>القسم<select id="questionCategory" required></select></label>
+              <label>نوع السؤال<select id="questionType" required><option value="mcq">اختيار متعدد</option><option value="true_false">صح وخطأ</option><option value="fill">إكمال فراغ</option><option value="text">كتابة</option></select></label>
+              <label>الصعوبة<select id="questionDifficulty" required><option value="easy">سهل</option><option value="medium">متوسط</option><option value="hard">صعب</option><option value="trainer">المدرب</option></select></label>
+              <label class="checkbox-row"><input id="questionActive" type="checkbox" checked><span>السؤال نشط ويظهر في الاختبارات</span></label>
+            </div>
+            <label>نص السؤال<textarea id="questionPromptInput" rows="3" maxlength="800" required></textarea></label>
+            <label id="optionsField">الخيارات — خيار في كل سطر<textarea id="questionOptions" rows="5" placeholder="الخيار الأول&#10;الخيار الثاني&#10;الخيار الثالث"></textarea></label>
+            <label>الإجابة الصحيحة أو الإجابات المقبولة — إجابة في كل سطر<textarea id="questionAnswers" rows="4" required placeholder="الإجابة الصحيحة"></textarea></label>
+            <label>شرح التصحيح <span class="optional">اختياري</span><textarea id="questionExplanation" rows="3" maxlength="1000" placeholder="يظهر للمستخدم بعد إنهاء الاختبار"></textarea></label>
+            <div class="form-message" id="questionFormMessage" role="alert"></div>
+            <div class="form-actions"><button class="button button-primary" type="submit">حفظ السؤال</button><button class="button button-ghost" id="cancelQuestionBtn" type="button">إلغاء</button></div>
+          </form>
+        </div>
+
+        <div class="filter-bar panel">
+          <input id="questionSearch" type="search" placeholder="ابحث في نص السؤال...">
+          <select id="questionCategoryFilter"><option value="all">كل الأقسام</option></select>
+          <select id="questionTypeFilter"><option value="all">كل الأنواع</option><option value="mcq">اختيار متعدد</option><option value="true_false">صح وخطأ</option><option value="fill">إكمال فراغ</option><option value="text">كتابة</option></select>
+        </div>
+        <div id="questionsTableWrap" class="table-wrap panel"></div>
+      </section>
+
+      <section id="resultsTab" class="admin-tab-panel">
+        <div class="admin-toolbar panel">
+          <div class="toolbar-copy"><h2>نتائج المتدربين</h2><p>استعرض النتائج والتفاصيل أو صدّرها بصيغة CSV.</p></div>
+          <button class="button button-secondary" id="exportResultsBtn" type="button">تصدير CSV</button>
+        </div>
+        <div class="filter-bar panel"><input id="resultSearch" type="search" placeholder="ابحث بالاسم أو القسم..."><select id="resultCategoryFilter"><option value="all">كل الأقسام</option></select></div>
+        <div id="resultsTableWrap" class="table-wrap panel"></div>
+      </section>
+
+      <section id="categoriesTab" class="admin-tab-panel">
+        <div class="admin-toolbar panel"><div class="toolbar-copy"><h2>إدارة الأقسام</h2><p>عدّل أسماء الأقسام ووصفها وترتيبها.</p></div><button class="button button-primary" id="newCategoryBtn" type="button">+ قسم جديد</button></div>
+        <div id="categoryEditor" class="panel editor-panel hidden">
+          <div class="editor-heading"><h2 id="categoryEditorTitle">قسم جديد</h2><button class="icon-button" id="closeCategoryEditorBtn" type="button">×</button></div>
+          <form id="categoryForm" class="stack-form">
+            <input id="categoryId" type="hidden">
+            <div class="form-grid two-columns"><label>اسم القسم<input id="categoryName" required maxlength="80"></label><label>المعرّف الإنجليزي<input id="categorySlug" required maxlength="50" pattern="[a-z0-9-]+" placeholder="example-section"></label><label>الأيقونة<input id="categoryIcon" maxlength="10" placeholder="📚"></label><label>الترتيب<input id="categoryOrder" type="number" min="0" value="0"></label></div>
+            <label>الوصف<textarea id="categoryDescription" rows="3" maxlength="300"></textarea></label>
+            <label class="checkbox-row"><input id="categoryActive" type="checkbox" checked><span>القسم نشط</span></label>
+            <div class="form-message" id="categoryFormMessage" role="alert"></div>
+            <div class="form-actions"><button class="button button-primary" type="submit">حفظ القسم</button><button class="button button-ghost" id="cancelCategoryBtn" type="button">إلغاء</button></div>
+          </form>
+        </div>
+        <div id="categoriesTableWrap" class="table-wrap panel"></div>
+      </section>
+
+      <section id="membersTab" class="admin-tab-panel">
+        <div class="admin-toolbar panel"><div class="toolbar-copy"><h2>قسم الأعضاء</h2><p>يعرض كل الأسماء التي دخلت الاختبارات مع عدد المحاولات وأفضل نتيجة وآخر نشاط.</p></div><button class="button button-secondary" id="exportMembersBtn" type="button">تصدير الأعضاء CSV</button></div>
+        <div id="membersTableWrap" class="table-wrap panel"></div>
+      </section>
+
+      <section id="siteTab" class="admin-tab-panel">
+        <div class="admin-toolbar panel"><div class="toolbar-copy"><h2>قسم الموقع</h2><p>إعدادات عامة محفوظة محلياً تظهر للمدير وتساعد في إدارة النسخة المنشورة.</p></div></div>
+        <form id="siteSettingsForm" class="panel stack-form">
+          <div class="form-grid two-columns">
+            <label>اسم الموقع<input id="siteNameInput" maxlength="90"></label>
+            <label>اسم المسؤول<input id="ownerNameInput" maxlength="90"></label>
+          </div>
+          <label>رسالة إدارية<textarea id="siteNoticeInput" rows="4" maxlength="400" placeholder="ملاحظات داخلية عن الموقع أو طريقة استخدامه"></textarea></label>
+          <div class="form-message" id="siteSettingsMessage" role="alert"></div>
+          <button class="button button-primary" type="submit">حفظ إعدادات الموقع</button>
+        </form>
+      </section>
+
+      <section id="securityTab" class="admin-tab-panel">
+        <div class="admin-toolbar panel"><div class="toolbar-copy"><h2>تغيير كلمة مرور المدير</h2><p>يعمل هذا الزر في وضع التخزين المحلي. عند ربط Supabase غيّر كلمة المرور من Authentication أيضاً.</p></div></div>
+        <form id="passwordForm" class="panel stack-form">
+          <label>كلمة المرور الحالية<input id="currentAdminPassword" type="password" required></label>
+          <div class="form-grid two-columns">
+            <label>كلمة المرور الجديدة<input id="newAdminPassword" type="password" required minlength="4"></label>
+            <label>تأكيد كلمة المرور<input id="confirmAdminPassword" type="password" required minlength="4"></label>
+          </div>
+          <div class="form-message" id="passwordMessage" role="alert"></div>
+          <button class="button button-primary" type="submit">تغيير كلمة المرور</button>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="detailsDialog" class="modal modal-wide"><form method="dialog" class="modal-card"><div class="editor-heading"><h2>تفاصيل النتيجة</h2><button class="icon-button" value="close">×</button></div><div id="resultDetailsContent"></div></form></dialog>
+  <dialog id="deleteDialog" class="modal"><form method="dialog" class="modal-card"><h2>تأكيد الحذف</h2><p id="deleteDialogText">لا يمكن التراجع عن هذه العملية.</p><div class="modal-actions"><button class="button button-danger" value="confirm">حذف</button><button class="button button-ghost" value="cancel">إلغاء</button></div></form></dialog>
+
+  <footer class="site-footer"><p>تصميم وإعداد: <strong>محمود عبد المعطي الأحمد</strong></p></footer>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

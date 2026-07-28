@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10241d">
+  <title>اختبر معلوماتك العسكرية | فوج الحماية</title>
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="background-grid" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark">درع</span><span><strong>اختبر معلوماتك العسكرية</strong><small>فوج الحماية</small></span></a>
+    <nav class="header-actions">
+      <span id="connectionStatus" class="status-line demo">جار تحميل بنك الأسئلة...</span>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="تبديل المظهر">☾</button>
+      <a class="button button-ghost button-small" href="admin.html">لوحة المدير</a>
+    </nav>
+  </header>
+
+  <main class="page-shell">
+    <section id="homeView" class="view active hero">
+      <div class="hero-copy">
+        <span class="eyebrow">منصة تدريب واختبار</span>
+        <h1>بنك أسئلة كامل بتجربة اختبار احترافية</h1>
+        <p>اختر القسم، مستوى الصعوبة، وعدد الأسئلة. تظهر النتيجة فوراً مع مراجعة للإجابات وحفظ أفضل نتيجة على جهازك.</p>
+        <div class="hero-actions">
+          <button class="button button-primary" id="openSetupBtn" type="button">ابدأ الاختبار</button>
+          <button class="button button-secondary" id="showPersonalBestBtn" type="button">أفضل نتيجة</button>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div><span>الأقسام</span><strong>8</strong></div>
+        <div><span>أنواع الأسئلة</span><strong>4</strong></div>
+        <div><span>لوحة إدارة</span><strong>كاملة</strong></div>
+      </div>
+    </section>
+
+    <section id="setupView" class="view">
+      <button class="button button-ghost button-small" data-go-home type="button">عودة</button>
+      <div class="section-heading"><span class="eyebrow">إعداد الاختبار</span><h2>اختر بيانات الاختبار</h2></div>
+      <form id="setupForm" class="panel stack-form">
+        <div class="form-grid three-columns">
+          <label>الاسم الكامل<input id="participantName" name="participantName" required minlength="2" maxlength="80" placeholder="اكتب اسمك"></label>
+          <label>الرتبة <span class="optional">اختياري</span><input name="participantRank" maxlength="60" placeholder="مثال: متدرب"></label>
+          <label>الوحدة <span class="optional">اختياري</span><input name="participantUnit" maxlength="80" placeholder="مثال: الفصيل الأول"></label>
+        </div>
+        <div class="category-grid" id="categoryGrid"></div>
+        <div class="form-grid three-columns">
+          <label>نوع السؤال<select name="questionType"><option value="mixed">مختلط</option><option value="mcq">اختيار متعدد</option><option value="true_false">صح وخطأ</option><option value="fill">إكمال فراغ</option><option value="text">كتابة</option></select></label>
+          <label>الصعوبة<select name="difficulty"><option value="all">كل المستويات</option><option value="easy">سهل</option><option value="medium">متوسط</option><option value="hard">صعب</option><option value="trainer">المدرب</option></select></label>
+          <label>عدد الأسئلة<select name="questionCount"><option value="20">20 سؤالاً</option><option value="10">10 أسئلة</option><option value="30">30 سؤالاً</option><option value="all">كل الأسئلة المتاحة</option></select></label>
+        </div>
+        <label class="checkbox-row"><input name="privacyConsent" type="checkbox" checked><span>أوافق على حفظ الاسم والنتيجة لغرض عرض النتائج داخل لوحة المدير.</span></label>
+        <div class="form-message" id="setupMessage" role="alert"></div>
+        <button class="button button-primary" type="submit">بدء الاختبار الآن</button>
+      </form>
+    </section>
+
+    <section id="quizView" class="view quiz-layout">
+      <div class="quiz-topbar panel">
+        <div><span id="quizSectionLabel" class="eyebrow">القسم</span><h2 id="quizSectionTitle">اختبار</h2></div>
+        <div class="quiz-meta"><span id="timerText">00:00</span><span id="questionCounter">1 / 1</span></div>
+      </div>
+      <div class="progress-track"><span id="progressBar"></span></div>
+      <article class="panel question-card">
+        <div class="badges"><span id="questionTypeBadge"></span><span id="questionDifficultyBadge"></span></div>
+        <h2 id="questionPrompt"></h2>
+        <div id="answerArea" class="answer-area"></div>
+        <div id="answerMessage" class="form-message"></div>
+        <div class="form-actions"><button class="button button-ghost" id="previousQuestionBtn" type="button">السابق</button><button class="button button-secondary" id="nextQuestionBtn" type="button">التالي</button><button class="button button-primary hidden" id="finishQuizBtn" type="button">إنهاء الاختبار</button></div>
+      </article>
+    </section>
+
+    <section id="resultsView" class="view">
+      <div class="result-card panel">
+        <div class="score-ring" id="scoreRing"><strong id="scoreValue">0</strong><span>%</span></div>
+        <div><span class="eyebrow">النتيجة</span><h2 id="resultMessage">أحسنت</h2><p id="resultDetails"></p></div>
+      </div>
+      <div class="result-stats">
+        <div><span>صحيح</span><strong id="correctCount">0</strong></div>
+        <div><span>خاطئ</span><strong id="wrongCount">0</strong></div>
+        <div><span>المدة</span><strong id="durationText">00:00</strong></div>
+      </div>
+      <div class="form-actions center"><button class="button button-primary" id="retryBtn" type="button">اختبار جديد</button><button class="button button-secondary" id="reviewToggleBtn" type="button">مراجعة الإجابات</button><button class="button button-ghost" id="printResultBtn" type="button">طباعة</button></div>
+      <section id="reviewSection" class="review-section hidden"><div id="reviewList" class="review-list"></div></section>
+    </section>
+  </main>
+
+  <dialog id="confirmDialog" class="modal"><form method="dialog" class="modal-card"><h2>إنهاء الاختبار؟</h2><p>سيتم احتساب نتيجتك اعتماداً على الإجابات الحالية.</p><div class="modal-actions"><button class="button button-primary" value="confirm">إنهاء</button><button class="button button-ghost" value="cancel">متابعة</button></div></form></dialog>
+  <dialog id="personalBestDialog" class="modal"><form method="dialog" class="modal-card"><div class="editor-heading"><h2>أفضل نتيجة</h2><button class="icon-button" value="close">×</button></div><div id="personalBestContent"></div></form></dialog>
+  <footer class="site-footer"><p>تصميم وإعداد: <strong>محمود عبد المعطي الأحمد</strong></p></footer>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
